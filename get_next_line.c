@@ -6,7 +6,7 @@
 /*   By: loscar <loscar@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/08 09:17:48 by student           #+#    #+#             */
-/*   Updated: 2020/07/17 21:46:15 by loscar           ###   ########.fr       */
+/*   Updated: 2020/07/17 23:20:39 by loscar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ char *check_remainder(char *remainder, char **line)
 		}
 	}
 	else
-		*line = ft_strdup("");
+		*line = ft_strnew(1);
 	return (p_n);
 }
 
@@ -79,24 +79,29 @@ int get_next_line(int fd, char **line)
 		*line = ft_strjoin(*line, (char*)buf);
 		free(tmp);
 	}
-	return ((remainder == NULL) ? 0 : 1);
+	if (remainder == NULL)
+		return (0);
+	else if (byte_was_read || ft_strlen(remainder) || ft_strlen(*line))
+		return (1);
+	else
+		return (0);
 }
 
 int main(void)
 {
 char *line;
 int fd;
+int otvet;
 
 fd = open("text.txt", O_RDONLY);
-get_next_line(fd, &line);
-printf("%s\n", line);
-get_next_line(fd, &line);
-printf("%s\n", line);
-get_next_line(fd, &line);
-printf("%s\n", line);
-get_next_line(fd, &line);
-printf("%s\n", line);
-get_next_line(fd, &line);
-printf("%s\n", line);
+otvet = get_next_line(fd, &line);
+printf("%s\n\n", line);
+printf("%d\n", otvet);
+otvet = get_next_line(fd, &line);
+printf("%s\n\n", line);
+printf("%d\n", otvet);
+otvet = get_next_line(fd, &line);
+printf("%s\n\n", line);
+printf("%d\n", otvet);
 return (0);
 }
