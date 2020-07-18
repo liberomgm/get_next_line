@@ -6,7 +6,7 @@
 /*   By: loscar <loscar@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/08 09:17:48 by student           #+#    #+#             */
-/*   Updated: 2020/07/17 23:20:39 by loscar           ###   ########.fr       */
+/*   Updated: 2020/07/18 03:51:34 by loscar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void ft_strclr(char *s)
 char *check_remainder(char *remainder, char **line)
 {
 	char *p_n;
+	char *tmp;
 	
 	p_n = NULL;
 	if (remainder)
@@ -44,12 +45,18 @@ char *check_remainder(char *remainder, char **line)
 		if ((p_n = ft_strchr(remainder, '\n')))
 		{
 			*p_n = '\0';
+			tmp = *line;
 			*line = ft_strdup(remainder);
+			free(tmp);
+			tmp = remainder;
 			remainder = ft_strdup(++p_n);
+			free(tmp);
 		}
 		else
 		{
+			tmp = *line;
 			*line = ft_strdup(remainder);
+			free(tmp);
 			ft_strclr(remainder);
 		}
 	}
@@ -73,7 +80,9 @@ int get_next_line(int fd, char **line)
 		if ((p_n = ft_strchr(buf, '\n')))
 		{
 			*p_n = '\0';
+			tmp = remainder;
 			remainder = ft_strdup(++p_n);
+			free(tmp);
 		}
 		tmp = *line;
 		*line = ft_strjoin(*line, (char*)buf);
@@ -84,7 +93,10 @@ int get_next_line(int fd, char **line)
 	else if (byte_was_read || ft_strlen(remainder) || ft_strlen(*line))
 		return (1);
 	else
+	{
+		free(remainder);
 		return (0);
+	}
 }
 
 int main(void)
