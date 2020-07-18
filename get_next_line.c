@@ -6,11 +6,10 @@
 /*   By: loscar <loscar@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/08 09:17:48 by student           #+#    #+#             */
-/*   Updated: 2020/07/18 03:51:34 by loscar           ###   ########.fr       */
+/*   Updated: 2020/07/18 09:43:13 by loscar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include <stdio.h>
 #include <fcntl.h>
 #include "get_next_line.h"
@@ -37,7 +36,6 @@ void ft_strclr(char *s)
 char *check_remainder(char *remainder, char **line)
 {
 	char *p_n;
-	char *tmp;
 	
 	p_n = NULL;
 	if (remainder)
@@ -45,18 +43,12 @@ char *check_remainder(char *remainder, char **line)
 		if ((p_n = ft_strchr(remainder, '\n')))
 		{
 			*p_n = '\0';
-			tmp = *line;
 			*line = ft_strdup(remainder);
-			free(tmp);
-			tmp = remainder;
 			remainder = ft_strdup(++p_n);
-			free(tmp);
 		}
 		else
 		{
-			tmp = *line;
 			*line = ft_strdup(remainder);
-			free(tmp);
 			ft_strclr(remainder);
 		}
 	}
@@ -73,6 +65,8 @@ int get_next_line(int fd, char **line)
 	char *p_n;
 	char *tmp;
 	
+	if (fd < 0 || line == NULL)
+		return (-1);
 	p_n = check_remainder(remainder, line);
 	while (!p_n && (byte_was_read = read(fd, buf, BUFFER_SIZE)))
 	{
@@ -80,9 +74,7 @@ int get_next_line(int fd, char **line)
 		if ((p_n = ft_strchr(buf, '\n')))
 		{
 			*p_n = '\0';
-			tmp = remainder;
 			remainder = ft_strdup(++p_n);
-			free(tmp);
 		}
 		tmp = *line;
 		*line = ft_strjoin(*line, (char*)buf);
@@ -97,23 +89,4 @@ int get_next_line(int fd, char **line)
 		free(remainder);
 		return (0);
 	}
-}
-
-int main(void)
-{
-char *line;
-int fd;
-int otvet;
-
-fd = open("text.txt", O_RDONLY);
-otvet = get_next_line(fd, &line);
-printf("%s\n\n", line);
-printf("%d\n", otvet);
-otvet = get_next_line(fd, &line);
-printf("%s\n\n", line);
-printf("%d\n", otvet);
-otvet = get_next_line(fd, &line);
-printf("%s\n\n", line);
-printf("%d\n", otvet);
-return (0);
 }
